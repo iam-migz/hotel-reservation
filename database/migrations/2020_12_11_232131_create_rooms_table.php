@@ -17,7 +17,6 @@ class CreateRoomsTable extends Migration
             $table->id();
             $table->enum('type', ['classic','deluxe']);
             $table->integer('max_capacity');
-            $table->boolean('availability');
             $table->timestamps();
         });
 

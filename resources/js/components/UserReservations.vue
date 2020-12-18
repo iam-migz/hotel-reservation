@@ -105,22 +105,30 @@ export default {
     },
     watch: {
         reservations(){
+            let price = 0;
             this.reservations.forEach((reservation, index) => {
             // get number of days for this reservation
             const check_in = new Date(reservation.check_in);
             const check_out = new Date(reservation.check_out);
             let days =  Math.round( (check_out - check_in ) / (1000 * 60 * 60 * 24) );
+            days = days ? days : 1;
+
+            price = 0;
 
             // get price for this reservation
-            const price = this.rooms[index].type == 'deluxe' ? 3000 : 1500;
-            this.totalPrice += price;
+            price += this.rooms[reservation.room_id - 1].type == 'deluxe' ? 3000 : 1500;
+            price *= days;
 
             // store days and price in records
             this.records.push({
                 days,
                 price
-            })
-        });
+                });
+
+            
+            this.totalPrice += price; 
+            });
+
         }
     }
 }

@@ -15,33 +15,23 @@ class DatabaseSeeder extends Seeder
         DB::table('rooms')->insert([
         [
             'type' => 'deluxe',
-            'max_capacity' => 5,
-            'availability' => true,
-            'created_at' => Carbon::now()
+            'max_capacity' => 5
         ],
         [
             'type' => 'deluxe',
-            'max_capacity' => 5,
-            'availability' => true,
-            'created_at' => Carbon::now()
+            'max_capacity' => 5
         ],
         [
             'type' => 'classic',
-            'max_capacity' => 4,
-            'availability' => true,
-            'created_at' => Carbon::now()
+            'max_capacity' => 4
         ],
         [
             'type' => 'classic',
-            'max_capacity' => 3,
-            'availability' => true,
-            'created_at' => Carbon::now()
+            'max_capacity' => 3
         ],
         [
             'type' => 'classic',
-            'max_capacity' => 3,
-            'availability' => true,
-            'created_at' => Carbon::now()
+            'max_capacity' => 3
         ],
         ]);
     }

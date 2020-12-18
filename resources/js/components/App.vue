@@ -2,17 +2,15 @@
     <div>
         <MiniHead :user-id="userId"/>
         <router-view :user-id="userId"></router-view>
-        <!-- <Footer /> -->
     </div>
 </template>
 
 <script>
 import MiniHead from './MiniHead';
-import Footer from './Footer';
 export default {
     props: ['userId'],
     components: {
-        Footer, MiniHead
+        MiniHead
     },
     data(){
         return {

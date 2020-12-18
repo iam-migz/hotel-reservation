@@ -47,13 +47,7 @@ class RoomController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $room = Room::find( $id );
 
-        $room->availability = $room->availability ? false : true;
-
-        $room->save();
-
-        return $room;
     }
 
     /**

@@ -77,16 +77,16 @@ export default {
         }
     },
     methods: {
-        getRoomAndReservations(){
+        getRoomAndReservations(){ // room id needed inorder to get reservations
             axios
                 .get(`/api/room/${this.$route.params.id}`)
                 .then(res => {
                     this.room = res.data
-                    axios
+                    axios  
                         .get(`/api/reservation/room/${this.room.id}`)
                         .then(reservations => {
-                            this.reservations = reservations.data
-                            console.log(this.reservations);
+                            this.reservations = reservations.data;
+                            this.reservations.sort((a, b) => new Date(a.check_in).getTime() - new Date(b.check_in).getTime() );
                         })
                         .catch(err => console.log(err));
                 })
@@ -95,10 +95,9 @@ export default {
         updateRoom(){
             const checkin_date = new Date(this.checkin);
             const checkout_date = new Date(this.checkout);
-            console.log('checkin_date :>> ', checkin_date);
-            console.log('checkout_date :>> ', checkout_date);
-            // return;
             const errorDiv = document.querySelector('.dateError');
+
+            errorDiv.innerHTML = "";
             const now = new Date();
             now.setHours(0,0,0,0);
 
@@ -112,20 +111,43 @@ export default {
                 return;
             }
 
-            let retVal = 0;
-            // check if dates are already reserved
-            this.reservations.forEach(reservation => {
-                const reserve_in = new Date(reservation.check_in).getTime();
-                const reserve_out = new Date(reservation.check_out).getTime();
 
-                if( checkin_date.getTime() > reserve_in && checkin_date.getTime() < reserve_out){
-                    errorDiv.innerHTML = "dates already reserved";
-                    retVal++;
+            let alreadyReserved = 0;
+            this.reservations.some((reservation, index) => { // check if dates are already reserved
+                alreadyReserved = 0;
+                const reserve_in = new Date(reservation.check_in);
+                const reserve_out = new Date(reservation.check_out);
+
+                if ( checkout_date < reserve_in && index == 0 ){ // first
+                    alreadyReserved++;
+                    return true;
+                }
+
+                if ( reserve_out < checkin_date && index == this.reservations.length - 1) { // last
+                    alreadyReserved++;
+                    return true;
+                }
+
+                let next_reserve_in;
+                if ( index + 1 < this.reservations.length ) { // error handling
+                    next_reserve_in = new Date(this.reservations[index + 1].check_in);
+                } 
+
+                if ( checkin_date > reserve_out && checkout_date < next_reserve_in) { // between
+                    alreadyReserved++; 
+                    return true;
+                
                 }
             });
-            if( retVal ){
-                return;
+            if ( this.reservations.length == 0 ){ // no reservations been made yet
+                alreadyReserved++;
             }
+            if ( !alreadyReserved ) {
+                errorDiv.innerHTML = "Sorry, these dates are already reserved.";
+                return;
+            } 
+
+
 
             // create a reservation 
             const reserve = {

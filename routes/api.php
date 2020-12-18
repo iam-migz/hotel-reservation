@@ -25,7 +25,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('/rooms', [RoomController::class, 'index']);
 Route::prefix('/room')->group( function() {
     Route::get('/{id}', [RoomController::class, 'show']);
-    Route::put('/{id}', [RoomController::class, 'update']);
 });
 
 Route::get('/reservations', [ReservationController::class, 'index']);
